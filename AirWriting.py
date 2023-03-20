@@ -25,9 +25,12 @@ brushSize=3
 def preprocess():
     image = cv2.imread('D:\\SRP\\HandTrackingProject\\ROI.png')
     imgGray=cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
+    blur = cv2.medianBlur(imgGray, 5)
     _,imgInv=cv2.threshold(imgGray,0,255,cv2.THRESH_BINARY_INV)
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    blur = cv2.medianBlur(gray, 5)
+    _,imgInv1=cv2.threshold(blur,0,255,cv2.THRESH_BINARY)
+    #cv2.imwrite("testing.png",imgInv1)
+    #gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    cv2.imwrite("testing.png",imgInv1)
     
     thresh = cv2.adaptiveThreshold(blur,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV,11,8)
     #cv2.adaptiveThreshold(src,maxVal,adaptiveThresholdType,thresholdtype,blocksize,C)
@@ -84,7 +87,7 @@ while cv2.waitKey(1)!=27:
         
         
         #Prepare mode:
-        if fingers[0]==False and fingers[1]==False and fingers[2]==False and fingers[3]==False and fingers[4]==False:
+        if fingers[0]==True and fingers[1]==True and fingers[2]==False and fingers[3]==False and fingers[4]==False:
             xp,yp=0,0
             cv2.putText(img,"PREPARE",(800,50),cv2.FONT_HERSHEY_PLAIN,2,(255, 255, 0),3)
             
