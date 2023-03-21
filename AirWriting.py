@@ -8,22 +8,18 @@ Created on Mon Feb 20 16:43:59 2023
 import cv2
 import HandTrackingModule as htm
 import time
+import tensorflow as tf
 import numpy as np
+from PIL import Image
+import csv
+# from tensorflow.keras.preprocessing.image import load_img, img_to_array
 #import os
 #import mediapipe as mp
 
-##################
-#PARAMETERS
-pTime=0 #previousTIme
-cTime=0 #currTime
-lmList=[] #List to store landmark id's & coordinates
-xp,yp=0,0 #Initial points to draw
-drawSelectColor=(102, 0, 102)
-brushSize=3
-##################
+
 
 def preprocess():
-    image = cv2.imread('D:\\SRP\\HandTrackingProject\\ROI.png')
+    image = cv2.imread('ROI.png')
     imgGray=cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
     blur = cv2.medianBlur(imgGray, 5)
     _,imgInv=cv2.threshold(imgGray,0,255,cv2.THRESH_BINARY_INV)
@@ -55,119 +51,134 @@ def preprocess():
         cv2.imwrite('ROI.png', ROI)
         break
     
+def main():
+    ##################
+    #PARAMETERS
+    pTime=0 #previousTIme
+    cTime=0 #currTime
+    lmList=[] #List to store landmark id's & coordinates
+    xp,yp=0,0 #Initial points to draw
+    drawSelectColor=(102, 0, 102)
+    brushSize=3
+    ##################
+    cap=cv2.VideoCapture(0)
+    cap.set(3,960) #3-Width
+    cap.set(4,540) #4-Height
+    #Must meet aspect ratio
 
-cap=cv2.VideoCapture(0)
-cap.set(3,960) #3-Width
-cap.set(4,540) #4-Height
-#Must meet aspect ratio
+    detector=htm.handDetector(detectionCon=0.4)
 
-detector=htm.handDetector(detectionCon=0.4)
-
-imgCanvas=np.zeros((540,960,3),np.uint8)
-cpy_imgCanvas=np.zeros((540,960,3),np.uint8)
+    imgCanvas=np.zeros((540,960,3),np.uint8)
+    cpy_imgCanvas=np.zeros((540,960,3),np.uint8)
 
 
-#27 - Esc
-while cv2.waitKey(1)!=27:
-    
-    success,img=cap.read()
-    img=cv2.flip(img,1) #Flip around y-axis
-    
-    img=detector.findHands(img,draw=False)
-    lmList=detector.findPosition(img,draw=False)
-    
-    
-    if len(lmList)!=0:
+    #27 - Esc
+    while cv2.waitKey(1)!=27:
         
-        #Index finger
-        x1,y1=lmList[8][1],lmList[8][2]
+        success,img=cap.read()
+        img=cv2.flip(img,1) #Flip around y-axis
         
-        fingers=detector.fingersUp()
-        #print(fingers)
+        img=detector.findHands(img,draw=False)
+        lmList=detector.findPosition(img,draw=False)
         
         
-        #Prepare mode:
-        if fingers[0]==True and fingers[1]==True and fingers[2]==False and fingers[3]==False and fingers[4]==False:
-            xp,yp=0,0
-            cv2.putText(img,"PREPARE",(800,50),cv2.FONT_HERSHEY_PLAIN,2,(255, 255, 0),3)
+        if len(lmList)!=0:
+            
+            #Index finger
+            x1,y1=lmList[8][1],lmList[8][2]
+            
+            fingers=detector.fingersUp()
+            #print(fingers)
             
             
-        #WRITE mode:
-        if fingers[0]==False and fingers[1] and fingers[2]==False and fingers[3]==False and fingers[4]==False:
-            cv2.putText(img,"WRITE",(800,50),cv2.FONT_HERSHEY_PLAIN,2,(255, 255, 0),3)
-            #cv2.circle(img,(x1,y1),8,drawSelectColor,cv2.FILLED)
-            if xp==0 and yp==0:
-                xp,yp=x1,y1
-            cv2.line(img,(xp,yp),(x1,y1),drawSelectColor,brushSize)  
-            cv2.line(imgCanvas,(xp,yp),(x1,y1),drawSelectColor,brushSize)
-            xp,yp=x1,y1
-            
-            
-        #DELETE mode:
-        if fingers[0] and fingers[1]==False and fingers[2]==False and fingers[3]==False and fingers[4]:
-            cv2.putText(img,"DELETE",(800,50),cv2.FONT_HERSHEY_PLAIN,2,(255, 255, 0),3)
-            imgCanvas=cpy_imgCanvas.copy()
-            xp,yp=0,0
-            
-            
-        #STORE mode:
-        if fingers[0]==False and fingers[1] and fingers[2] and fingers[3]==False and fingers[4]==False:
-            xp,yp=0,0
-            cv2.putText(img,"STORE",(800,50),cv2.FONT_HERSHEY_PLAIN,2,(255, 255, 0),3)
-            cv2.imwrite("ROI.png",imgCanvas)
-            preprocess()
+            #Prepare mode:
+            if fingers[0]==True and fingers[1]==True and fingers[2]==False and fingers[3]==False and fingers[4]==False:
+                xp,yp=0,0
+                cv2.putText(img,"PREPARE",(800,50),cv2.FONT_HERSHEY_PLAIN,2,(255, 255, 0),3)
                 
-    cTime=time.time()
-    fps=1/(cTime-pTime)
-    pTime=cTime
-    
-    cv2.putText(img,str(int(fps)),(25,50),cv2.FONT_HERSHEY_PLAIN,2,(255, 255, 0),3)
-    
-    
-    #####EMBEDDING CANVAS BACK TO THE IMAGE#######
-    
-    #cv2.imshow("imgCanvas",imgCanvas)
-    
-    imgGray=cv2.cvtColor(imgCanvas,cv2.COLOR_BGR2GRAY)
-    
-    #Low intensity px (close to 0) remains in 0
-    #High intensity px gets its corresponding shade either in white or gray
-    #cv2.imshow("imgGray",imgGray)
-    #to two-dimensional
-    
-    _,imgInv=cv2.threshold(imgGray,0,255,cv2.THRESH_BINARY_INV)
-    
-    #SYNTAX => cv2.threshold(src,threshold,maxval,type,dtype=None)
-    #cv2.THRESH_BINARY px<threshold => 0 px px>threshold => 255 px
-    #cv2.THRESH_BINARY_INV => just the opposite
-    # px in the range of 0 goes 255 and vice versa
-    #cv2.THRESH_TRUNC => threshold 200 means upto 200 same, greater than that changes to 200
-    #cv2.THRESH_TOZERO => less than threshold to 0, greater than that remains same
-    #cv3.THRESH_TOZERO_INV opposite
-    #cv2.imshow("imgInv",imgInv)
-    
-    imgInv=cv2.cvtColor(imgInv,cv2.COLOR_GRAY2BGR)
-    
-    #the same grayscale value is used for all three color channels, resulting in a grayscale-looking BGR image.
-    #127 px => (127,127,127) => same gray px except the shape differs
-    #cv2.imshow("imgInvBGR",imgInv)
-    #print(img.shape,imgInv.shape)
-    
-    img=cv2.bitwise_and(img,imgInv)
-    
-    
-    #0, (1-255)=1 1(Has to be other than 0) && 1(imgInv) = 1
-    #cv2.imshow("imgAND",img)
-    
-    img=cv2.bitwise_or(img,imgCanvas)
-    
-    # if any one px is 1, then 1 => img already has 1
-    #cv2.imshow("imgOR",img)
-    cv2.imshow("AIR WRITING",img)
-    #cv2.imshow("Final imgInv",imgCanvas)
-    
-cap.release()
-cv2.destroyAllWindows()
+                
+            #WRITE mode:
+            if fingers[0]==False and fingers[1] and fingers[2]==False and fingers[3]==False and fingers[4]==False:
+                cv2.putText(img,"WRITE",(800,50),cv2.FONT_HERSHEY_PLAIN,2,(255, 255, 0),3)
+                #cv2.circle(img,(x1,y1),8,drawSelectColor,cv2.FILLED)
+                if xp==0 and yp==0:
+                    xp,yp=x1,y1
+                cv2.line(img,(xp,yp),(x1,y1),drawSelectColor,brushSize)  
+                cv2.line(imgCanvas,(xp,yp),(x1,y1),drawSelectColor,brushSize)
+                xp,yp=x1,y1
+                
+                
+            #DELETE mode:
+            if fingers[0] and fingers[1]==False and fingers[2]==False and fingers[3]==False and fingers[4]:
+                cv2.putText(img,"DELETE",(800,50),cv2.FONT_HERSHEY_PLAIN,2,(255, 255, 0),3)
+                imgCanvas=cpy_imgCanvas.copy()
+                xp,yp=0,0
+                
+                
+            #STORE mode:
+            if fingers[0]==False and fingers[1] and fingers[2] and fingers[3]==False and fingers[4]==False:
+                xp,yp=0,0
+                cv2.putText(img,"STORE",(800,50),cv2.FONT_HERSHEY_PLAIN,2,(255, 255, 0),3)
+                cv2.imwrite("ROI.png",imgCanvas)
+                preprocess()
+
+            #CLOSE mode:
+            # if fingers[0]and fingers[1] and fingers[2] and fingers[3] and fingers[4]:
+            #     cv2.putText(img,"CLOSE",(800,50),cv2.FONT_HERSHEY_PLAIN,2,(255, 255, 0),3)
+            #     cap.release()
+            #     cv2.destroyAllWindows()
+                    
+        cTime=time.time()
+        fps=1/(cTime-pTime)
+        pTime=cTime
+        
+        cv2.putText(img,str(int(fps)),(25,50),cv2.FONT_HERSHEY_PLAIN,2,(255, 255, 0),3)
+        
+        
+        #####EMBEDDING CANVAS BACK TO THE IMAGE#######
+        
+        #cv2.imshow("imgCanvas",imgCanvas)
+        
+        imgGray=cv2.cvtColor(imgCanvas,cv2.COLOR_BGR2GRAY)
+        
+        #Low intensity px (close to 0) remains in 0
+        #High intensity px gets its corresponding shade either in white or gray
+        #cv2.imshow("imgGray",imgGray)
+        #to two-dimensional
+        
+        _,imgInv=cv2.threshold(imgGray,0,255,cv2.THRESH_BINARY_INV)
+        
+        #SYNTAX => cv2.threshold(src,threshold,maxval,type,dtype=None)
+        #cv2.THRESH_BINARY px<threshold => 0 px px>threshold => 255 px
+        #cv2.THRESH_BINARY_INV => just the opposite
+        # px in the range of 0 goes 255 and vice versa
+        #cv2.THRESH_TRUNC => threshold 200 means upto 200 same, greater than that changes to 200
+        #cv2.THRESH_TOZERO => less than threshold to 0, greater than that remains same
+        #cv3.THRESH_TOZERO_INV opposite
+        #cv2.imshow("imgInv",imgInv)
+        
+        imgInv=cv2.cvtColor(imgInv,cv2.COLOR_GRAY2BGR)
+        
+        #the same grayscale value is used for all three color channels, resulting in a grayscale-looking BGR image.
+        #127 px => (127,127,127) => same gray px except the shape differs
+        #cv2.imshow("imgInvBGR",imgInv)
+        #print(img.shape,imgInv.shape)
+        
+        img=cv2.bitwise_and(img,imgInv)
+        
+        
+        #0, (1-255)=1 1(Has to be other than 0) && 1(imgInv) = 1
+        #cv2.imshow("imgAND",img)
+        
+        img=cv2.bitwise_or(img,imgCanvas)
+        
+        # if any one px is 1, then 1 => img already has 1
+        #cv2.imshow("imgOR",img)
+        cv2.imshow("AIR WRITING",img)
+        #cv2.imshow("Final imgInv",imgCanvas)
+        
+    cap.release()
+    cv2.destroyAllWindows()
 
 #import cv2
 #img=cv2.imread("C:\\Users\\kishore prashanth\\Downloads\\ABC.png")
@@ -176,4 +187,55 @@ cv2.destroyAllWindows()
 #cv2.waitKey(0)
 #cv2.destroyAllWindows()
 #cv2.imwrite("ROI.png",img)
+    
+
+
+def predictUsingModel():
+    
+
+    tamilCharacterCode = []
+
+    w,h=128,128
+    with open('unicodeTamil.csv', newline='') as f:
+        reader = csv.reader(f)
+        data = list(reader)
+        for i in data:
+            go = i[1].split(' ')
+            charL = ""
+            for gg in go:
+                charL = charL + "\\u"+str(gg)
+            tamilCharacterCode.append(charL.encode('utf-8').decode('unicode-escape'))
+
+
+
+
+    img = Image.open('ROI.png')
+
+    # Preprocess the image
+    img = img.resize((128, 128))
+    img = np.array(img) / 255.0
+    img = np.expand_dims(img, axis=0)
+
+    # Load the trained model
+    model = tf.keras.models.load_model('TamilCharsTrainedModel.h5')
+
+    # Pass the image through the model
+    output = model.predict(img)
+
+    # Get the top 3 predicted classes and their probabilities
+    top_classes = np.argsort(output[0])[-3:][::-1]
+    top_probs = output[0][top_classes]
+
+    # Print the top 3 predicted classes and their probabilities
+
+    ans=[]
+    #for i in range(3):
+        #ans.append(f"{tamilCharacterCode[top_classes[i]]}: {top_probs[i]}")
+        #print(f"{tamilCharacterCode[top_classes[i]]}: {top_probs[i]}")
+
+    return top_classes,top_probs
+
+
+#main()
+#predictUsingModel()
 
