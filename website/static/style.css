@@ -1,0 +1,222 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Oswald', sans-serif;
+    color: white;
+    overflow-x: hidden;
+}
+
+#video-background {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -100;
+    overflow: hidden;
+    object-fit: cover;
+}
+
+#video-content {
+    position: relative;
+    z-index: 1;
+    color: white;
+    text-align: center;
+    font-size: 4rem;
+    font-weight: bold;
+    margin-top: 12%;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.wrap {
+    width: 100%;
+}
+
+.gradient-text {
+    color: white;
+    background: linear-gradient(to right, #611097, rgb(175, 3, 175), #f23486);
+    background-size: 200% 200%;
+    animation: rainbow 2s ease-in-out infinite;
+    background-clip: text;
+    -webkit-background-clip: text;
+    text-align: center;
+    transition: color .2s ease-in-out;
+    font-weight: 900;
+}
+
+.gradient-text:hover {
+    color: rgba(0, 0, 0, 0);
+}
+
+@keyframes rainbow {
+    0% {
+        background-position: left
+    }
+
+    50% {
+        background-position: right
+    }
+
+    100% {
+        background-position: left
+    }
+}
+
+.flexbox {
+    display: flex;
+    list-style-type: none;
+    margin-left: 10%;
+    align-items: center;
+
+}
+
+.flex-item {
+    font-size: 22px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    margin-right: 20%;
+    margin-top: 20px;
+    padding-bottom: 10px;
+
+}
+
+
+
+.about {
+    margin-top: 250px;
+}
+
+.sub-title {
+    text-align: center;
+    font-size: 50px;
+}
+
+.about-sub-title {
+    font-size: 40px;
+}
+
+.about-flex {
+    display: flex;
+    margin-top: 90px;
+    align-items: center;
+}
+
+.about-flex-content {
+    font-size: 20px;
+}
+
+.about-flex-item {
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+.about-img:hover {
+    transform: scale(1.1);
+    transition: transform 0.5s ease-in-out;
+}
+
+.exp-card {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding: 10px;
+}
+
+.exp-button {
+    color: white;
+    padding: 20px;
+    border-radius: 20px;
+    background: none;
+    border: 1px solid white;
+    font-size: 20px;
+    margin-left: 20%;
+}
+
+.exp-button:hover {
+    background: linear-gradient(to right, #611097, rgb(175, 3, 175), #f23486);
+    background-size: 200% 200%;
+    animation: rainbow 2s ease-in-out infinite;
+    transition: all .2s ease-in-out;
+    cursor: pointer;
+}
+
+footer {
+    margin-top: 100px;
+    background-color: black;
+    padding: 20px;
+    text-align: center;
+}
+
+.footer-text {
+    font-size: 20px;
+}
+
+.remove-link {
+    color: white;
+    text-decoration: none;
+}
+
+.remove-link:hover {
+    color: rgb(175, 3, 175);
+}
+
+.faq-container {
+    margin-top: 70px;
+
+}
+
+.accordion {
+    background-color: transparent;
+    color: white;
+    font-size: 24px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    cursor: pointer;
+    padding: 18px;
+    padding-top: 24px;
+    padding-bottom: 24px;
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
+    text-align: left;
+    border: none;
+    outline: none;
+    border-bottom: 1px solid white;
+    transition: 0.4s;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active,
+.accordion:hover {
+    background-color: black;
+}
+
+/* Style the accordion panel. Note: hidden by default */
+.panel {
+    padding: 0 18px;
+    background-color: black;
+    max-height: 0;
+    margin-left: 10%;
+    margin-right: 10%;
+    font-size: 22px;
+    /* border: 1px solid white; */
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+    border-bottom: 1px solid white;
+}
+
+.accordion:after {
+    content: '\02193';
+    /* Unicode character for "plus" sign (+) */
+    font-size: 20px;
+    color: white;
+    float: right;
+    margin-left: 5px;
+}
+
+.active:after {
+    content: "\2191";
+    /* Unicode character for "minus" sign (-) */
+}

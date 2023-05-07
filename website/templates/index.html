@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Air Writing</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/1a0babe9d4.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/scrollreveal.js/3.3.1/scrollreveal.min.js"></script>
+</head>
+
+<body>
+    <video autoplay muted loop id="video-background">
+        <source src="{{ url_for('static', filename='back_video.mp4') }}" type="video/mp4">
+        Your browser does not support HTML5 video.
+    </video>
+    <!-- Navigation bar -->
+    <nav class="navbar">
+        <ul class="flexbox">
+            <li class="flex-item gradient-text"><a href="#" class="remove-link">Home</a></li>
+            <li class="flex-item gradient-text"><a href="#about" class="remove-link">About</a></li>
+            <li class="flex-item gradient-text"><a href="#expe" class="remove-link">Experience</a></li>
+            <li class="flex-item gradient-text"><a href="#faq" class="remove-link">FAQs</a></li>
+        </ul>
+    </nav>
+
+    <div id="video-content">
+        <h1 class="main-title gradient-text">Air Writing</h1>
+    </div>
+
+
+    <main class="about">
+        <a id="about"></a>
+        <h1 class="sub-title gradient-text">About</h1>
+        <div class="about-flex">
+            <div class="about-flex-item">
+                <img src="{{ url_for('static', filename='img1.webp') }}" height="550" width="550" class="about-img">
+            </div>
+            <div class="about-flex-item">
+                <h1 class="about-sub-title">What is Air Writing?</h1>
+                <div class="about-flex-content">
+                    Air Writing is a technique that allows individuals to write or draw in the air, without the need for
+                    pen and paper or any physical surface. It is a form of gestural communication that utilizes motion
+                    sensors and computer vision technology to track the movements of the user's hand or fingers and
+                    convert them into digital images or text.
+                </div>
+                <h1 class="about-sub-title">Why do we need Air Writing?</h1>
+                <div class="about-flex-content">
+                    Hearing-impaired people face significant communication barriers, particularly when interacting with
+                    hearing individuals who do not know sign language. This can lead to feelings of isolation and
+                    exclusion. This project provides an effective way of communication using air writing and it enables
+                    users to convey many messages with little effort. Air writing is often more easily understood than
+                    other forms of communication, such as lip reading, which can be ambiguous or unclear.
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <main class="about">
+        <a id="expe"></a>
+        <h1 class="sub-title gradient-text">Experience</h1>
+        <div class="about-flex">
+            <div class="about-flex-item">
+                <div class="exp-card">
+                    <img src="{{ url_for('static', filename='img1.webp') }}">
+                    <div class="exp-content">
+                        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Accusantium
+                        reprehenderit necessitatibus sed optio, id voluptatem. Adipisci sequi dicta inventore dolores,
+                        tenetur ducimus aliquam, ipsum consequatur hic itaque quia nesciunt vero vel mollitia recusandae
+                        ipsa aspernatur sit quidem, magni quibusdam quaerat?
+                    </div>
+                    <form method="POST" action="/execute1">
+                        <input type="submit" class="exp-button" value="Animal Quiz">
+                    </form>
+                </div>
+            </div>
+            <div class="about-flex-item">
+                <div class="exp-card">
+                    <img src="{{ url_for('static', filename='img1.webp') }}">
+                    <div class="exp-content">
+                        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Accusantium
+                        reprehenderit necessitatibus sed optio, id voluptatem. Adipisci sequi dicta inventore dolores,
+                        tenetur ducimus aliquam, ipsum consequatur hic itaque quia nesciunt vero vel mollitia recusandae
+                        ipsa aspernatur sit quidem, magni quibusdam quaerat?
+                    </div>
+                    <form method="POST" action="/execute2">
+                        <input type="submit" class="exp-button" value="Numbers Quiz">
+                    </form>
+                </div>
+            </div>
+            <div class="about-flex-item">
+                <div class="exp-card">
+                    <img src="{{ url_for('static', filename='img1.webp') }}">
+                    <div class="exp-content">
+                        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Accusantium
+                        reprehenderit necessitatibus sed optio, id voluptatem. Adipisci sequi dicta inventore dolores,
+                        tenetur ducimus aliquam, ipsum consequatur hic itaque quia nesciunt vero vel mollitia recusandae
+                        ipsa aspernatur sit quidem, magni quibusdam quaerat?
+                    </div>
+                    <form method="POST" action="/execute3">
+                        <input type="submit" class="exp-button" value="Alphabets Quiz">
+                    </form>
+                </div>
+            </div>
+            <div class="about-flex-item">
+                <div class="exp-card">
+                    <img src="{{ url_for('static', filename='img1.webp') }}">
+                    <div class="exp-content">
+                        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Accusantium
+                        reprehenderit necessitatibus sed optio, id voluptatem. Adipisci sequi dicta inventore dolores,
+                        tenetur ducimus aliquam, ipsum consequatur hic itaque quia nesciunt vero vel mollitia recusandae
+                        ipsa aspernatur sit quidem, magni quibusdam quaerat?
+                    </div>
+                    <form method="POST" action="/execute4">
+                        <input type="submit" class="exp-button" value="General Quiz">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <main class="about">
+        <a id="faq"></a>
+        <h1 class="sub-title gradient-text">Frequently Asked Questions</h1>
+        <div class="faq-container">
+            <button class="accordion">What are the technologies used for this project?</button>
+            <div class="panel">
+                <p>The techonlogies used are Mediapipe, TensorFlow, Flask, OpenCV, gTTS (Google Text-to-Speech)</p>
+            </div>
+
+            <button class="accordion">Which languages are currently available?</button>
+            <div class="panel">
+                <p>Currently we have provided support only for Tamil</p>
+            </div>
+
+            <button class="accordion">Why Air Writing in Tamil is needed?</button>
+            <div class="panel">
+                <p>Air writing can be used as a teaching tool in Tamil language classes, helping students to learn the
+                    letters and words through a more interactive and kinesthetic approach.</p>
+            </div>
+
+            <button class="accordion">How does the application recognise the letters drawn on the screen?</button>
+            <div class="panel">
+                <p>Using a CNN (Convolutional Neural Network) with multiple layers that is trained with over 82000
+                    images of Tamil characters
+                </p>
+            </div>
+
+            <button class="accordion">Is there any limit on the number of letters that can be drawn?</button>
+            <div class="panel">
+                <p>There is no limit on the number of letters that can be drawn. However, the maximum width for drawing
+                    letters is limited to the screen's width</p>
+            </div>
+        </div>
+
+
+    </main>
+
+
+    <footer>
+        <div class="footer-text">
+            <p>Created by <a href="https://www.linkedin.com/in/kishorep3105/" class="remove-link">Kishore Prashanth
+                    P</a> and <a href="https://www.linkedin.com/in/arunachalam-manikandan/"
+                    class="remove-link">Arunachalam M</a>
+                &copy; 2023. All rights
+                reserved.</p>
+        </div>
+    </footer>
+
+
+    <script>
+        window.sr = ScrollReveal();
+        sr.reveal('.about', { duration: 1500 });
+        sr.reveal('.YourClass2');
+
+        // accordion code
+        var acc = document.getElementsByClassName("accordion");
+        var i;
+
+        for (i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.maxHeight) {
+                    panel.style.maxHeight = null;
+                } else {
+                    panel.style.maxHeight = panel.scrollHeight + "px";
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
